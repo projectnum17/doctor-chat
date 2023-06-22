@@ -32,38 +32,53 @@ document.getElementById("scroll_id").addEventListener("click", function () {
 });
 
 //форма
-/* document
-	.getElementById("order_form")
-	.addEventListener("submit", function (event) {
-		var phoneNumber = document.getElementById("input-phone").value;
+
+/* $(document).ready(function () {
+	$("#order_form").submit(function (event) {
+		event.preventDefault(); // Отменяем отправку формы по умолчанию
+
+		var phoneNumber = $("#input-phone").val();
 
 		// Проверка условий валидации
 		if (
 			!phoneNumber.startsWith("+38") ||
 			!/^\+38\d+$/.test(phoneNumber) ||
-			phoneNumber.length !== 13 
+			phoneNumber.length !== 13
 		) {
-			// Если условия не выполняются, отменяем отправку формы
-			event.preventDefault();
-
-			// Выводим сообщение об ошибке
+			// Если условия не выполняются, выводим сообщение об ошибке
 			alert(
 				'Номер телефона должен начинаться с "+38", содержать только цифры (без пробелов и других символов) и состоять из 13 символов.'
 			);
 
 			// Подсвечиваем поле красным цветом
-			document.getElementById("input-phone").style.borderColor = "red";
-			document
-				.getElementById("input-phone")
-				.addEventListener("input", function () {
-					var phoneNumberInput = document.getElementById("input-phone");
-					phoneNumberInput.style.borderColor = ""; // Сбросить стиль рамки при изменении значения
-				});
+			$("#input-phone").css("border-color", "red");
+			$("#input-phone").on("input", function () {
+				var phoneNumberInput = $("#input-phone");
+				phoneNumberInput.css("border-color", ""); // Сбросить стиль рамки при изменении значения
+			});
+		} else {
+			// Выводим данные формы в консоль (в табличном формате)
+			var formData = $("#order_form").serializeArray();
+			console.table(formData);
+
+			// Отправляем форму с помощью AJAX
+			$.ajax({
+				url: $("#order_form").attr("action"),
+				type: "POST",
+				data: $("#order_form").serialize(),
+				success: function (response) {
+					// Форма отправлена успешно
+					$("#order_form")[0].reset(); // Очищаем поля формы
+					alert("Форма успешно отправлена! проверьте консоль");
+				},
+				error: function () {
+					// Произошла ошибка при отправке формы
+					alert("Проверьте консоль разработчика");
+				},
+			});
 		}
-
-        
-	}); */
-
+	});
+}); */
 $(document).ready(function () {
 	$("#order_form").submit(function (event) {
 		event.preventDefault(); // Отменяем отправку формы по умолчанию
@@ -85,26 +100,20 @@ $(document).ready(function () {
 			$("#input-phone").css("border-color", "red");
 			$("#input-phone").on("input", function () {
 				var phoneNumberInput = $("#input-phone");
-				phoneNumberInput.css("borderColor", ""); // Сбросить стиль рамки при изменении значения
+				phoneNumberInput.css("border-color", ""); // Сбросить стиль рамки при изменении значения
 			});
+		} else {
+			// Выводим данные формы в консоль (в табличном формате)
+			var formData = $("#order_form").serializeArray();
+			console.table(formData);
 
-			return; // Прекращаем выполнение кода
+			// Очищаем поля формы
+			$("#order_form")[0].reset();
+
+			// Показываем сообщение об успешной отправке
+			alert(
+				"Форма успешно отправлена! Проверьте консоль для просмотра данных."
+			);
 		}
-
-		// Отправляем форму с помощью AJAX
-		$.ajax({
-			url: "mail/mail.php",
-			type: "POST",
-			data: $("#order_form").serialize(),
-			success: function (response) {
-				// Форма отправлена успешно
-				$("#order_form")[0].reset(); // Очищаем поля формы
-				alert("Форма успешно отправлена!");
-			},
-			error: function () {
-				// Произошла ошибка при отправке формы
-				alert("Ошибка при отправке формы. Пожалуйста, попробуйте еще раз.");
-			},
-		});
 	});
 });
