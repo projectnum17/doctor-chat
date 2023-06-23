@@ -1,4 +1,4 @@
-// Получаем ссылки на кнопку и контейнер с комментариями
+//блок с комментариями
 var showMoreButton = document.getElementById("show-more-button");
 var commentsContainer = document.getElementById("comments-container");
 
@@ -23,7 +23,7 @@ showMoreButton.addEventListener("click", function () {
 	commentsContainer.appendChild(showMoreButton);
 });
 
-//якорь
+//Smooth Scroll
 document.getElementById("scroll_id").addEventListener("click", function () {
 	var targetElement = document.querySelector(this.getAttribute("data-scroll"));
 	if (targetElement) {
@@ -31,86 +31,68 @@ document.getElementById("scroll_id").addEventListener("click", function () {
 	}
 });
 
-//форма
-
-/* $(document).ready(function () {
-	$("#order_form").submit(function (event) {
-		event.preventDefault(); // Отменяем отправку формы по умолчанию
-
-		var phoneNumber = $("#input-phone").val();
-
-		// Проверка условий валидации
-		if (
-			!phoneNumber.startsWith("+38") ||
-			!/^\+38\d+$/.test(phoneNumber) ||
-			phoneNumber.length !== 13
-		) {
-			// Если условия не выполняются, выводим сообщение об ошибке
-			alert(
-				'Номер телефона должен начинаться с "+38", содержать только цифры (без пробелов и других символов) и состоять из 13 символов.'
-			);
-
-			// Подсвечиваем поле красным цветом
-			$("#input-phone").css("border-color", "red");
-			$("#input-phone").on("input", function () {
-				var phoneNumberInput = $("#input-phone");
-				phoneNumberInput.css("border-color", ""); // Сбросить стиль рамки при изменении значения
-			});
-		} else {
-			// Выводим данные формы в консоль (в табличном формате)
-			var formData = $("#order_form").serializeArray();
-			console.table(formData);
-
-			// Отправляем форму с помощью AJAX
-			$.ajax({
-				url: $("#order_form").attr("action"),
-				type: "POST",
-				data: $("#order_form").serialize(),
-				success: function (response) {
-					// Форма отправлена успешно
-					$("#order_form")[0].reset(); // Очищаем поля формы
-					alert("Форма успешно отправлена! проверьте консоль");
-				},
-				error: function () {
-					// Произошла ошибка при отправке формы
-					alert("Проверьте консоль разработчика");
-				},
-			});
-		}
-	});
-}); */
+//Form
 $(document).ready(function () {
+	var selectedGender; // Gender
+	var selectedAllergy; // Allergy
+
+	//Gender
+	$(document).on("click", ".chooseGenderM", function () {
+		selectedGender = "Мужчина";
+	});
+
+	$(document).on("click", ".chooseGenderW", function () {
+		selectedGender = "Женщина";
+	});
+
+	//Alergy
+	$(document).on("click", "#yeas", function () {
+		selectedAllergy = "Да";
+	});
+
+	$(document).on("click", "#no", function () {
+		selectedAllergy = "Нет";
+	});
+
+	//отправка
 	$("#order_form").submit(function (event) {
-		event.preventDefault(); // Отменяем отправку формы по умолчанию
+		event.preventDefault();
 
 		var phoneNumber = $("#input-phone").val();
+		var fullName = $("#input-name").val();
+		var day = $("select[name='day']").val();
+		var month = $("select[name='month']").val();
+		var year = $("select[name='year']").val();
 
-		// Проверка условий валидации
+		// Valid phone
 		if (
 			!phoneNumber.startsWith("+38") ||
 			!/^\+38\d+$/.test(phoneNumber) ||
 			phoneNumber.length !== 13
 		) {
-			// Если условия не выполняются, выводим сообщение об ошибке
 			alert(
 				'Номер телефона должен начинаться с "+38", содержать только цифры (без пробелов и других символов) и состоять из 13 символов.'
 			);
 
-			// Подсвечиваем поле красным цветом
+			//Border
 			$("#input-phone").css("border-color", "red");
 			$("#input-phone").on("input", function () {
 				var phoneNumberInput = $("#input-phone");
-				phoneNumberInput.css("border-color", ""); // Сбросить стиль рамки при изменении значения
+				phoneNumberInput.css("border-color", "");
 			});
 		} else {
-			// Выводим данные формы в консоль (в табличном формате)
-			var formData = $("#order_form").serializeArray();
+			var formData = {
+				Пол: selectedGender,
+				ДатаРождения: day + "." + month + "." + year,
+				Аллергия: selectedAllergy,
+				Имя: fullName,
+				Телефон: phoneNumber,
+			};
+
 			console.table(formData);
 
-			// Очищаем поля формы
 			$("#order_form")[0].reset();
 
-			// Показываем сообщение об успешной отправке
 			alert(
 				"Форма успешно отправлена! Проверьте консоль для просмотра данных."
 			);
